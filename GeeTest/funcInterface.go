@@ -1,5 +1,7 @@
 package main
 
+import "fmt"
+
 //A Getter loads data for key
 type Getter interface {
 	Get(key string) ([]byte, error)
@@ -25,6 +27,25 @@ func test(key string) ([]byte, error) {
 	return []byte(key), nil
 }
 
+func test2(key string) ([]byte, error) {
+	return []byte(key + "syttt"), nil
+}
+
+type DB struct{ url string }
+
+func (db *DB) Query(sql string, args ...string) string {
+	return "hello"
+}
+
+func (db *DB) Get(key string) ([]byte, error) {
+	v := db.Query("SELECT NAME FROM TABLE WHEN NAME= ?", key)
+	return []byte(v), nil
+}
+
 func main() {
-	GetFromSource(GetterFunc(test), "hello")
+	res1 := GetFromSource(GetterFunc(test), "hello")
+	fmt.Println(res1)
+	res2 := GetFromSource(GetterFunc(test2), "hello")
+	fmt.Println(res2)
+	//GetFromSource(new(DB), "hello")
 }

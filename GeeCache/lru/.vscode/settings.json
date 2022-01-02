@@ -1,3 +1,4 @@
 {
-    "svn.ignoreMissingSvnWarning": true
+    "svn.ignoreMissingSvnWarning": true,
+    "commentTranslate.targetLanguage": "zh-CN"
 }

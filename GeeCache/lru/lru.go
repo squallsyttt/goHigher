@@ -2,6 +2,16 @@ package lru
 
 import "container/list"
 
+//双向链表节点的数据类型
+type entry struct {
+	key   string
+	value Value
+}
+
+type Value interface {
+	Len() int
+}
+
 // Cache  is an LRU cache. It is not safe for concurrent access
 type Cache struct {
 	//允许使用的最大内存
@@ -16,37 +26,33 @@ type Cache struct {
 	OnEvicted func(key string, value Value)
 }
 
-//双向链表节点的数据类型
-type entry struct {
-	key   string
-	value Value
-}
-
-type Value interface {
-	Len() int
-}
-
-func New(maxBytes int64, onEvicted func(string, Value)) *Cache {
+func New(maxBytes int64,onEvicted func(string,Value)) *Cache{
 	return &Cache{
-		maxBytes:  maxBytes,
-		ll:        list.New(),
-		cache:     make(map[string]*list.Element),
+		maxBytes: maxBytes,
+		ll: list.New(),
+		cache: make(map[string]*list.Element),
 		OnEvicted: onEvicted,
 	}
 }
 
-func (c *Cache) Get(key string) (value Value, ok bool) {
-	if ele, ok := c.cache[key]; ok {
+func (c *Cache) Get(key string) (value Value,ok bool){
+	if ele,ok := c.cache[key] ;ok{
 		c.ll.MoveToFront(ele)
+		//这边这个entry没有很看得懂 等会调试的时候打印看下
 		kv := ele.Value.(*entry)
 		return kv.value, true
 	}
 	return
 }
 
-func (c *Cache) Add(key string, value Value) {
-	if ele, ok := c.cache[key]; ok {
-		c.ll.MoveToFront(ele)
-		//TODO
-	}
+func (c *Cache) Add(){
+// TODO
+}
+
+func (c *Cache) Del(){
+// TODO
+}
+
+func (c *Cache) Len() int {
+	return c.ll.Len()
 }
